@@ -1,4 +1,4 @@
-### Robot25B (Beta Code)
+### Robot25B (Beta)
 ----------------------------------------------------------------------------
 FRC Team 4450 2025 Robot Control program used in competition.
 
@@ -18,6 +18,6 @@ Download the RobotLib.json file from the RobotLib Github repo and drop it into t
 ****************************************************************************************************************
 Version 25B.0
 
-*   First beta release of 2025 Base Code.
+*   First version of 2025 Base Code beta. This is full 2024 code converted to 2025 beta WPILib & vendor libraries.
  
-R. Corn, December 3 2024
+R. Corn, December 5 2024
