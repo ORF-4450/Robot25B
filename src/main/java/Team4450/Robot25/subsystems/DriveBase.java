@@ -12,10 +12,12 @@ import java.util.Optional;
 import com.ctre.phoenix.unmanaged.Unmanaged;
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.util.PIDConstants;
-import com.pathplanner.lib.util.ReplanningConfig;
+import com.pathplanner.lib.config.PIDConstants;
+import com.pathplanner.lib.config.RobotConfig;
+import com.pathplanner.lib.controllers.PPHolonomicDriveController;
+//import com.pathplanner.lib.util.ReplanningConfig;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
+//import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 
 import Team4450.Robot25.Constants.AutoConstants;
 import Team4450.Robot25.Constants.DriveConstants;
@@ -867,36 +869,68 @@ public class DriveBase extends SubsystemBase {
 
     // different PID values for real/simulation because they are quite different.
     PIDConstants rotPID = new PIDConstants(AutoConstants.kHolonomicPathFollowerP, 0.0, 0.0);
+    
     if (RobotBase.isSimulation()) rotPID = new PIDConstants(0.5, 0.0, 0.0);
 
-    AutoBuilder.configureHolonomic(
-      this::getPosePP, // Robot pose supplier
-      this::resetOdometryPP, // Method to reset odometry (will be called if your auto has a starting pose)
-      this::getChassisSpeedsPP, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-      this::driveChassisSpeedsPP, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-      new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-              new PIDConstants(AutoConstants.kHolonomicPathFollowerP, 0.0, 0.0), // Translation PID constants
-              rotPID, // Rotation PID constants
-              DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
-              DriveConstants.kDriveBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
+    // Load the RobotConfig from the GUI settings. 
+    RobotConfig config = null;
 
-              // below tells PP "don't do any random moving without explicit instructions": will probably change in future
-              // new ReplanningConfig(false, false)
-              new ReplanningConfig(true, false)
-      ),
-      () -> {
-          // Boolean supplier that controls when the path will be mirrored for the red alliance
-          // This will flip the path being followed to the red side of the field.
-          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE.
- 
-          var alliance = Constants.alliance;
+    try{
+      config = RobotConfig.fromGUISettings();
+    } catch (Exception e) { e.printStackTrace(); }
+
+    // Configure AutoBuilder.
+    AutoBuilder.configure(
+            this::getPose,              // Robot pose supplier
+            this::resetOdometryPP,      // Method to reset odometry (will be called if your auto has a starting pose)
+            this::getChassisSpeedsPP,   // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            this::driveChassisSpeedsPP,   // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
+            new PPHolonomicDriveController(// PPHolonomicController is the built in path following controller for holonomic drive trains
+                    new PIDConstants(AutoConstants.kHolonomicPathFollowerP, 0.0, 0.0), // Translation PID constants
+                    rotPID // Rotation PID constants
+            ),
+            config, // The robot configuration
+            () -> {
+              // Boolean supplier that controls when the path will be mirrored for the red alliance
+              // This will flip the path being followed to the red side of the field.
+              // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+              var alliance = Constants.alliance;
           
-          return alliance == DriverStation.Alliance.Red;
-      },
-      this // Reference to this subsystem to set requirements
+              return alliance == DriverStation.Alliance.Red;
+            },
+            this // Reference to this subsystem to set requirements
     );
-    // PPHolonomicDriveController.setRotationTargetOverride(this::getPPRotationTargetOverride);
   }
+
+    // 2024 code:
+    //rich AutoBuilder.configureHolonomic(
+    //   this::getPosePP, // Robot pose supplier
+    //   this::resetOdometryPP, // Method to reset odometry (will be called if your auto has a starting pose)
+    //   this::getChassisSpeedsPP, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+    //   this::driveChassisSpeedsPP, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+    //   new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+    //           new PIDConstants(AutoConstants.kHolonomicPathFollowerP, 0.0, 0.0), // Translation PID constants
+    //           rotPID, // Rotation PID constants
+    //           DriveConstants.kMaxSpeedMetersPerSecond, // Max module speed, in m/s
+    //           DriveConstants.kDriveBaseRadius, // Drive base radius in meters. Distance from robot center to furthest module.
+
+    //           // below tells PP "don't do any random moving without explicit instructions": will probably change in future
+    //           // new ReplanningConfig(false, false)
+    //           new ReplanningConfig(true, false)
+    //   ),
+    //   () -> {
+    //       // Boolean supplier that controls when the path will be mirrored for the red alliance
+    //       // This will flip the path being followed to the red side of the field.
+    //       // THE ORIGIN WILL REMAIN ON THE BLUE SIDE.
+ 
+    //       var alliance = Constants.alliance;
+          
+    //       return alliance == DriverStation.Alliance.Red;
+    //   },
+    //   this // Reference to this subsystem to set requirements
+//    );
+//  }
 
   /**
    * Returns an Optional value of the desired rotation (yaw) to override PathPlanner,
