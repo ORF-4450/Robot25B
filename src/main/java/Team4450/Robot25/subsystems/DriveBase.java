@@ -10,7 +10,7 @@ import static Team4450.Robot25.Constants.alliance;
 import java.util.Optional;
 
 import com.ctre.phoenix.unmanaged.Unmanaged;
-import com.kauailabs.navx.frc.AHRS;
+import com.studica.frc.AHRS;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
@@ -75,8 +75,12 @@ public class DriveBase extends SubsystemBase {
   //private final ADIS16470_IMU gyro = new ADIS16470_IMU();
 
   // Note: If we switch gyros back to ADS IMU, we will have to create code to
-  // drive the 360 degree direction indicator (gyro2) on the  shuffleboard
+  // drive the 360 degree direction indicator (gyro2) on the shuffleboard
   // display as it is currently driven directly by the NavX class from RobotLib.
+  // Note: RobotContainer.navx is the NavX class in RobotLib. Here, navx is the
+  // AHRS class from MavX API, which is contained inside the RobotLib NavX class.
+  // We used AHRS instead of RobotLib NavX because it was a direct substitute into
+  // the REV swerve code example this class is based on. Yes, its confusing.
   private final AHRS    navx = RobotContainer.navx.getAHRS();
 
   private SimDouble     simAngle; // navx sim.
@@ -106,7 +110,6 @@ public class DriveBase extends SubsystemBase {
   private double speedLimiter = 1;
   private double rotSpeedLimiter = 1;
   
-
   // we limit magnitude changes in the positive direction (acceleration), but allow crazy high rates in negative direction
   // (deceleration). this has effect that deceleration is instant but acceleration is limited
   // this is the solution from 2024 to solve battery sag/stutter issues and it's been working
@@ -170,7 +173,7 @@ public class DriveBase extends SubsystemBase {
 
     if (RobotBase.isSimulation())
     {
-      var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[0]");
+      var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
 
       simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
     }
@@ -187,7 +190,8 @@ public class DriveBase extends SubsystemBase {
     // note that this doesn't really do much because PathPlanner redoes this anyway
     resetOdometry(DriveConstants.DEFAULT_STARTING_POSE); 
 
-    configureAutoBuilder();
+    //rich configureAutoBuilder();
+
     updateDS();
   }
 

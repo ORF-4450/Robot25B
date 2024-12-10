@@ -1,6 +1,6 @@
 {
     "name": "ORF-4450-RobotLib",
-    "version": "4.8.3",
+    "version": "local",
     "uuid": "27d5b603-ec71-4576-b639-4eb46f1d9f66",
     "frcYear": "2025",
     "mavenUrls": [
@@ -12,7 +12,7 @@
         {
             "groupId": "com.github.ORF-4450",
             "artifactId": "RobotLib",
-            "version": "4.8.3"
+            "version": "local"
         }
     ],
     "jniDependencies": [],

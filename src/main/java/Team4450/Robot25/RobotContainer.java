@@ -273,15 +273,18 @@ public class RobotContainer
 		
 		// Start camera server thread using our class for usb cameras.
     
-		cameraFeed = CameraFeed.getInstance(); 
-		cameraFeed.start();
- 		
+		if (RobotBase.isReal())
+		{
+			cameraFeed = CameraFeed.getInstance(); 
+			cameraFeed.start();
+		}
+
 		// Log info about NavX.
 	  
-		navx.dumpValuesToNetworkTables();
+		//navx.dumpValuesToNetworkTables();
  		
 		if (navx.isConnected())
-			Util.consoleLog("NavX version=%s", navx.getAHRS().getFirmwareVersion());
+			Util.consoleLog("NavX connected version=%s", navx.getAHRS().getFirmwareVersion());
 		else
 		{
 			Exception e = new Exception("NavX is NOT connected!");
@@ -290,7 +293,7 @@ public class RobotContainer
         
         // Configure autonomous routines and send to dashboard.
 		
-		//setAutoChoices();
+		//rich setAutoChoices();
 
 		// Configure the button bindings.
 		
