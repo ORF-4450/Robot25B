@@ -83,7 +83,8 @@ public class DriveBase extends SubsystemBase {
   // the REV swerve code example this class is based on. Yes, its confusing.
   private final AHRS    navx = RobotContainer.navx.getAHRS();
 
-  private SimDouble     simAngle; // navx sim.
+  //private SimDouble     simAngle; // navx sim.
+  private double        simAngle; // used to drive navx sim.
 
   private ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
@@ -171,12 +172,12 @@ public class DriveBase extends SubsystemBase {
 
     // Set up simulated NavX.
 
-    if (RobotBase.isSimulation())
-    {
-      var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
+    if (RobotBase.isSimulation()) RobotContainer.navx.initializeSim();
+    //rich {
+    //   var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
 
-      simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
-    }
+    //   simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
+    // }
 
     // Field2d drives the field display under simulation.
 
@@ -274,9 +275,10 @@ public class DriveBase extends SubsystemBase {
 
     double temp = chassisSpeeds.omegaRadiansPerSecond * 1.1459155;
 
-    temp += simAngle.get();
-
-    simAngle.set(temp);
+    //rich temp += simAngle.get();
+    simAngle += temp;
+    RobotContainer.navx.setSimAngle(simAngle);
+    //simAngle.set(temp);
 
     Unmanaged.feedEnable(20);
   }

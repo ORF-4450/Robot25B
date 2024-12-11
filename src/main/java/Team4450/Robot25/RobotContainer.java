@@ -169,7 +169,7 @@ public class RobotContainer
 		// Warning: The navx instance is shared with the swerve drive code. Resetting or otherwise
 		// manipulating the navx (as opposed to just reading data) may crash the swerve drive code.
 
-		navx = NavX.getInstance(NavX.PortType.SPI);
+		navx = NavX.getInstance();
 
 		// Add navx as a Sendable. Updates the dashboard heading indicator automatically.
  		
