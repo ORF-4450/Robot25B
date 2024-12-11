@@ -191,7 +191,7 @@ public class DriveBase extends SubsystemBase {
     // note that this doesn't really do much because PathPlanner redoes this anyway
     resetOdometry(DriveConstants.DEFAULT_STARTING_POSE); 
 
-    //rich configureAutoBuilder();
+    configureAutoBuilder();
 
     updateDS();
   }

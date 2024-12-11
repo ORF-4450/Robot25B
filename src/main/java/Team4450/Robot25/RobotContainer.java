@@ -281,7 +281,7 @@ public class RobotContainer
 
 		// Log info about NavX.
 	  
-		//navx.dumpValuesToNetworkTables();
+		navx.dumpValuesToNetworkTables();
  		
 		if (navx.isConnected())
 			Util.consoleLog("NavX connected version=%s", navx.getAHRS().getFirmwareVersion());
@@ -293,7 +293,7 @@ public class RobotContainer
         
         // Configure autonomous routines and send to dashboard.
 		
-		//rich setAutoChoices();
+		setAutoChoices();
 
 		// Configure the button bindings.
 		
