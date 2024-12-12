@@ -173,11 +173,6 @@ public class DriveBase extends SubsystemBase {
     // Set up simulated NavX.
 
     if (RobotBase.isSimulation()) RobotContainer.navx.initializeSim();
-    //rich {
-    //   var dev = SimDeviceDataJNI.getSimDeviceHandle("navX-Sensor[4]"); // 4 = MXP_SPI
-
-    //   simAngle = new SimDouble((SimDeviceDataJNI.getSimValueHandle(dev, "Yaw")));
-    // }
 
     // Field2d drives the field display under simulation.
 
@@ -275,10 +270,9 @@ public class DriveBase extends SubsystemBase {
 
     double temp = chassisSpeeds.omegaRadiansPerSecond * 1.1459155;
 
-    //rich temp += simAngle.get();
     simAngle += temp;
+
     RobotContainer.navx.setSimAngle(simAngle);
-    //simAngle.set(temp);
 
     Unmanaged.feedEnable(20);
   }
@@ -441,8 +435,8 @@ public class DriveBase extends SubsystemBase {
 
     // convert chassis speeds from robot relative to field relative if fieldrelative driving mode true.
     if (fieldRelative) chassisSpeeds.toRobotRelativeSpeeds(getGyroYaw2d());
-  
-    //rich chassisSpeeds =
+
+    //rich 2025 chassisSpeeds =
     //     fieldRelative
     //         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getGyroYaw()))
     //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
