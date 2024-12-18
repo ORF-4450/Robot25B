@@ -23,11 +23,12 @@ import Team4450.Robot25.Constants.AutoConstants;
 import Team4450.Robot25.Constants.DriveConstants;
 import Team4450.Robot25.Constants.ModuleConstants;
 import Team4450.Robot25.utility.SwerveUtils;
-import Team4450.Robot25.utility.Talon_FX;
 import Team4450.Robot25.AdvantageScope;
 import Team4450.Robot25.Constants;
 import Team4450.Robot25.RobotContainer;
 import Team4450.Lib.Util;
+import Team4450.Lib.FXEncoder;
+import Team4450.Lib.Talon_FX;
 
 import edu.wpi.first.hal.SimDouble;
 import edu.wpi.first.hal.simulation.SimDeviceDataJNI;
@@ -149,7 +150,9 @@ public class DriveBase extends SubsystemBase {
         VecBuilder.fill(1.2, 1.2, Math.toRadians(10)) // std deviations of vision inputs (higher = less vision more enoders)
       );
 
-  public Talon_FX talon_Fx = new Talon_FX(50, DCMotor.getFalcon500(1), 1.0);
+  public Talon_FX talon_FX = new Talon_FX(50, DCMotor.getFalcon500(1), 1.0);
+
+  public FXEncoder fxEncoder = new FXEncoder(talon_FX, 1.0);
 
   public DriveBase() {
     Util.consoleLog("max vel=%.2f m/s", DriveConstants.kMaxSpeedMetersPerSecond);
@@ -281,7 +284,7 @@ public class DriveBase extends SubsystemBase {
 
     Unmanaged.feedEnable(20);
 
-    talon_Fx.simulationPeriodic();
+    talon_FX.simulationPeriodic();
   }
 
   /**

@@ -178,3 +178,4 @@ simgui.json
 *.zip
 
 networktables.json
+ctre_sim/

@@ -389,6 +389,7 @@ public class RobotContainer
 		// Holding x button sets X pattern to stop movement.
 		new Trigger(() -> driverController.getXButton())
 			.whileTrue(new RunCommand(() -> driveBase.setX(), driveBase));
+			//.whileTrue(new RunCommand(() -> driveBase.fxEncoder.reset(), driveBase));
 
 		// toggle brake mode
 		new Trigger(() -> driverController.getAButton())
