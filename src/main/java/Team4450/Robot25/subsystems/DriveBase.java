@@ -23,6 +23,7 @@ import Team4450.Robot25.Constants.AutoConstants;
 import Team4450.Robot25.Constants.DriveConstants;
 import Team4450.Robot25.Constants.ModuleConstants;
 import Team4450.Robot25.utility.SwerveUtils;
+import Team4450.Robot25.utility.Talon_FX;
 import Team4450.Robot25.AdvantageScope;
 import Team4450.Robot25.Constants;
 import Team4450.Robot25.RobotContainer;
@@ -41,6 +42,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotBase;
@@ -147,6 +149,8 @@ public class DriveBase extends SubsystemBase {
         VecBuilder.fill(1.2, 1.2, Math.toRadians(10)) // std deviations of vision inputs (higher = less vision more enoders)
       );
 
+  public Talon_FX talon_Fx = new Talon_FX(50, DCMotor.getFalcon500(1), 1.0);
+
   public DriveBase() {
     Util.consoleLog("max vel=%.2f m/s", DriveConstants.kMaxSpeedMetersPerSecond);
 
@@ -248,6 +252,7 @@ public class DriveBase extends SubsystemBase {
 
     // Updates sim display of swerve modules.
     setField2dModulePoses();
+
     AdvantageScope.getInstance().setSwerveModules(frontLeft, frontRight, rearLeft, rearRight);
   }
 
@@ -275,6 +280,8 @@ public class DriveBase extends SubsystemBase {
     RobotContainer.navx.setSimAngle(simAngle);
 
     Unmanaged.feedEnable(20);
+
+    talon_Fx.simulationPeriodic();
   }
 
   /**
