@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public final class Constants
 {
-	public static String		PROGRAM_NAME = "ORF-12.12.24-25B";
+	public static String		PROGRAM_NAME = "ORF-12.23.24-25B";
 
 	public static Robot			robot;
 
@@ -123,8 +123,8 @@ public final class Constants
 	public static final int		LCD_10 = 10;	// ShuffleBoard subsystem.
 
     public static final class DriveConstants {
-        // Driving Parameters - Note that these are not the maximum capable speeds of
-        // the robot, but instead they are the allowed maximum speeds
+        // Driving Parameters - These are the maximum capable speeds of
+        // the robot.
 
         public static final double kMaxSpeedMetersPerSecond = 4.0;  // 1.0; Speed limited for demos.
         //public static final double kMaxSpeedMetersPerSecond = ModuleConstants.kDriveWheelFreeSpeedRps; // max speed
@@ -137,7 +137,7 @@ public final class Constants
         public static final double kMagnitudeSlewRate = 1; // percent per second (1 = 100%).
         public static final double kRotationalSlewRate = Double.POSITIVE_INFINITY; // percent per second (1 = 100%).
 
-        // Chassis configuration
+        // Chassis configuration:
 
         // Distance between centers of right and left wheels
         public static final double kTrackWidth = Units.inchesToMeters(29);

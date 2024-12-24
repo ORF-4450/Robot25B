@@ -244,6 +244,7 @@ public class RobotContainer
 
 		// up and down on left operator controller joystick pivots shooter assembly
 		// up and down on right operator controller joystick moves elevator assembly
+		
 		elevShooter.setDefaultCommand(new RunCommand(
 			()->{elevShooter.moveRelative(
 				-MathUtil.applyDeadband(utilityController.getLeftY(), DRIVE_DEADBAND), // pivot
@@ -388,7 +389,7 @@ public class RobotContainer
 
 		// Holding x button sets X pattern to stop movement.
 		new Trigger(() -> driverController.getXButton())
-			.whileTrue(new RunCommand(() -> driveBase.setX(), driveBase));
+				.whileTrue(new RunCommand(() -> driveBase.setX(), driveBase));
 			//.whileTrue(new RunCommand(() -> driveBase.fxEncoder.reset(), driveBase));
 
 		// toggle brake mode

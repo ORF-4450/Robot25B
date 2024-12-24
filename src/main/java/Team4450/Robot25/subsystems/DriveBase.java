@@ -86,7 +86,7 @@ public class DriveBase extends SubsystemBase {
   // the REV swerve code example this class is based on. Yes, its confusing.
   private final AHRS    navx = RobotContainer.navx.getAHRS();
 
-  //private SimDouble     simAngle; // navx sim.
+  //rich private SimDouble     simAngle; // navx sim.
   private double        simAngle; // used to drive navx sim.
 
   private ChassisSpeeds chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
@@ -110,7 +110,7 @@ public class DriveBase extends SubsystemBase {
   private double currentTranslationDir = 0.0;
   private double currentTranslationMag = 0.0;
 
-  // multiplied by X,Y translation and rotation outputs for "slow mode" (or boost I guess)
+  // multiplied by X,Y translation and rotation outputs for "slow mode".
   private double speedLimiter = 1;
   private double rotSpeedLimiter = 1;
   
@@ -150,9 +150,9 @@ public class DriveBase extends SubsystemBase {
         VecBuilder.fill(1.2, 1.2, Math.toRadians(10)) // std deviations of vision inputs (higher = less vision more enoders)
       );
 
-  public Talon_FX talon_FX = new Talon_FX(50, DCMotor.getFalcon500(1), 1.0);
+  //public Talon_FX talon_FX = new Talon_FX(50, DCMotor.getFalcon500(1), 1.0);
 
-  public FXEncoder fxEncoder = new FXEncoder(talon_FX, 1.0);
+  //public FXEncoder fxEncoder = new FXEncoder(talon_FX, 1.0);
 
   public DriveBase() {
     Util.consoleLog("max vel=%.2f m/s", DriveConstants.kMaxSpeedMetersPerSecond);
@@ -284,7 +284,7 @@ public class DriveBase extends SubsystemBase {
 
     Unmanaged.feedEnable(20);
 
-    talon_FX.simulationPeriodic();
+    //talon_FX.simulationPeriodic();
   }
 
   /**
@@ -428,7 +428,7 @@ public class DriveBase extends SubsystemBase {
       currentRotation = rotLimiter.calculate(rot);
       // END STRANGE MAGICAL REV CODE ===========================
     }
-    else { // if not ratelimited (do not suggets because of battery sage/stutter issues)
+    else { // if not ratelimited (do not suggest because of battery sag/stutter issues)
       xSpeedCommanded = xSpeed;
       ySpeedCommanded = ySpeed;
       currentRotation = rot;
@@ -440,16 +440,10 @@ public class DriveBase extends SubsystemBase {
     double ySpeedDelivered = ySpeedCommanded * speedLimiter * DriveConstants.kMaxSpeedMetersPerSecond;
     double rotDelivered = currentRotation * rotSpeedLimiter * DriveConstants.kMaxAngularSpeed;
 
-    // create robot relative ChassisSpeeds object.
-    chassisSpeeds = new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
-
-    // convert chassis speeds from robot relative to field relative if fieldrelative driving mode true.
-    if (fieldRelative) chassisSpeeds.toRobotRelativeSpeeds(getGyroYaw2d());
-
-    //rich 2025 chassisSpeeds =
-    //     fieldRelative
-    //         ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getGyroYaw()))
-    //         : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
+    chassisSpeeds =
+         fieldRelative
+             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getGyroYaw()))
+             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered);
 
     driveChassisSpeeds(chassisSpeeds);
   }
@@ -465,10 +459,9 @@ public class DriveBase extends SubsystemBase {
   public ChassisSpeeds getChassisSpeedsPP() {
     return new ChassisSpeeds();
   }
-  
 
   /**
-   * Drives robot by commanding swerve modules from a ChassisSpeeds object.
+   * Drives robot by commanding swerve modules with a ChassisSpeeds object.
    * @param speeds The ChassisSpeeds object.
    */
   public void driveChassisSpeeds(ChassisSpeeds speeds) {
@@ -490,6 +483,7 @@ public class DriveBase extends SubsystemBase {
    */
   public void driveChassisSpeedsPP(ChassisSpeeds speeds) {
     if (RobotBase.isSimulation()) this.chassisSpeeds = new ChassisSpeeds(0, 0, -speeds.omegaRadiansPerSecond);
+    
     driveChassisSpeeds(speeds);
   }
   

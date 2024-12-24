@@ -1,6 +1,6 @@
 plugins {
     id "java"
-    id "edu.wpi.first.GradleRIO" version "2025.1.1-beta-2"
+    id "edu.wpi.first.GradleRIO" version "2025.1.1-beta-3"
 
     // This is a plugin that allows us to access git information about the version
     // of the code we are compiling and include it in the manifiest of the Jar

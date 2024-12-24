@@ -50,7 +50,7 @@ public class MAXSwerveModule implements Sendable {
   private final SparkClosedLoopController drivingPIDController;
   private final SparkClosedLoopController turningPIDController;
 
-  private double            chassisAngularOffset = 0;
+  private double            chassisAngularOffset = 0, lastDrivePIDReference = 0;
 
   private double            currentSimVelocity = 0, currentSimPosition = 0, currentSimAngle = 0;
   public String             moduleLocation;
@@ -182,7 +182,7 @@ public class MAXSwerveModule implements Sendable {
 
     this.chassisAngularOffset = chassisAngularOffset;
     
-    // if (RobotBase.isSimulation())
+    //rich if (RobotBase.isSimulation())
     //   desiredState.angle = new Rotation2d();
     // else
     //   desiredState.angle = new Rotation2d(turningEncoder.getPosition());
@@ -200,7 +200,7 @@ public class MAXSwerveModule implements Sendable {
       //richREVPhysicsSim.getInstance().addSparkMax(turningSparkMax, DCMotor.getNeo550(1));
 
       drivingSim = new SparkSim(drivingSparkMax, DCMotor.getNEO(1));
-      //REVPhysicsSim.getInstance().addSparkMax(drivingSparkMax, DCMotor.getNEO(1));
+      //richREVPhysicsSim.getInstance().addSparkMax(drivingSparkMax, DCMotor.getNEO(1));
     }
   }
 
@@ -267,6 +267,8 @@ public class MAXSwerveModule implements Sendable {
 
     // Command driving and turning SPARKS MAX towards their respective setpoints.
     drivingPIDController.setReference(desiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
+    lastDrivePIDReference = desiredState.speedMetersPerSecond;
+    
     turningPIDController.setReference(desiredState.angle.getRadians(), SparkMax.ControlType.kPosition);
 
     currentSimAngle = desiredState.angle.getRadians();
@@ -374,5 +376,6 @@ public class MAXSwerveModule implements Sendable {
     builder.addDoubleProperty("5 Steer angle SP", () -> Math.toDegrees(currentSimAngle), null);
     builder.addDoubleProperty("6 Actual velocity", () -> getVelocity(), null);
     builder.addDoubleProperty("7 Actual steer sngle", () -> getAngle2d().getDegrees(), null);
+    builder.addDoubleProperty("8 Drive PID reference", () -> lastDrivePIDReference, null);
 	}   
 }
