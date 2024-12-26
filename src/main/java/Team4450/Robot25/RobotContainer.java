@@ -278,7 +278,9 @@ public class RobotContainer
 		{
 			cameraFeed = CameraFeed.getInstance(); 
 			cameraFeed.start();
-		}
+		} 
+		
+		DriverStation.silenceJoystickConnectionWarning(RobotBase.isSimulation());
 
 		// Log info about NavX.
 	  
@@ -317,7 +319,7 @@ public class RobotContainer
 
 		//PathPlannerTrajectory ppTestTrajectory = loadPPTrajectoryFile("richard");
 
-		Util.consoleLog("End robot container------------------------------");
+		Util.consoleLog(endMarker);
 	}
 
 	/**
