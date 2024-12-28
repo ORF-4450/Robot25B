@@ -37,7 +37,7 @@ import Team4450.Robot25.Constants.ModuleConstants;
  */
 public class MAXSwerveModule implements Sendable {
   private final SparkMax drivingSparkMax;
-  private final SparkMax turningSparkMax;
+  private final SparkMax  turningSparkMax;
 
   private SparkMaxConfig drivingConfig = new SparkMaxConfig();
   private SparkMaxConfig turningConfig = new SparkMaxConfig();
@@ -60,8 +60,8 @@ public class MAXSwerveModule implements Sendable {
   /**
    * Constructs a MAXSwerveModule and configures the driving and turning motor,
    * encoder, and PID controller. This configuration is specific to the REV
-   * MAXSwerve Module built with NEOs, SPARKMAX, and a Through Bore
-   * Encoder.
+   * MAXSwerve Module built with NEO driving, Neo550 steering, SPARKMAX controller
+   * and a Through Bore encoder.
    */
   public MAXSwerveModule(int drivingCANId, int turningCANId, double chassisAngularOffset, String moduleLocation) {
     this.moduleLocation = moduleLocation;
@@ -73,8 +73,8 @@ public class MAXSwerveModule implements Sendable {
     drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
     turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
 
-    // Factory reset, so we get the SPARKS MAX to a known state before configuring
-    // them. This is useful in case a SPARK MAX is swapped out.
+    // Factory reset, so we get the SPARK controller to a known state before configuring
+    // them. This is useful in case a SPARK controller is swapped out.
     drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     //richdrivingSparkMax.restoreFactoryDefaults();
@@ -265,7 +265,7 @@ public class MAXSwerveModule implements Sendable {
     //richSwerveModuleState optimizedDesiredState = SwerveModuleState.optimize(correctedDesiredState,
     //    new Rotation2d(turningEncoder.getPosition()));
 
-    // Command driving and turning SPARKS MAX towards their respective setpoints.
+    // Command driving and turning SPARK controllers towards their respective setpoints.
     drivingPIDController.setReference(desiredState.speedMetersPerSecond, SparkMax.ControlType.kVelocity);
     lastDrivePIDReference = desiredState.speedMetersPerSecond;
     
