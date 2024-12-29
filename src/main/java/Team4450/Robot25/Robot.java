@@ -132,7 +132,7 @@ public class Robot extends TimedRobot
       endCompetition();
     }
 
-    Util.consoleLog(endMarker);
+    Util.consoleLog(functionMarker);
   }
 
   /**
@@ -194,7 +194,7 @@ public class Robot extends TimedRobot
     //   FunctionTracer.INSTANCE.printFunctions(Util.logPrintStream);
     // }
     robotContainer.unlockMechanisms();
-    Util.consoleLog(endMarker);
+    Util.consoleLog(functionMarker);
   }
 
   /**
@@ -213,7 +213,7 @@ public class Robot extends TimedRobot
   @Override
   public void autonomousInit() 
   {
-    Util.consoleLog(endMarker);
+    Util.consoleLog(functionMarker);
 
     LCD.clearAll();
 
@@ -239,7 +239,7 @@ public class Robot extends TimedRobot
       this.endCompetition();
     }
 
-    Util.consoleLog(endMarker);
+    Util.consoleLog(functionMarker);
   }
 
   /**
@@ -257,7 +257,7 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit() 
   {
-    Util.consoleLog(endMarker);
+    Util.consoleLog(functionMarker);
 
     robotContainer.getMatchInformation();
 
@@ -277,7 +277,7 @@ public class Robot extends TimedRobot
 
     if  (tracing) FunctionTracer.INSTANCE.reset();
 
-    Util.consoleLog(endMarker);
+    Util.consoleLog(functionMarker);
   }
 
   /**

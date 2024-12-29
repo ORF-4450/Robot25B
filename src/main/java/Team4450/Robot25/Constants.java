@@ -26,7 +26,7 @@ import edu.wpi.first.wpilibj.DriverStation;
  */
 public final class Constants
 {
-	public static String		PROGRAM_NAME = "ORF-12.28.24-25B";
+	public static String		PROGRAM_NAME = "ORF25B-12.28.24-Flex";
 
 	public static Robot			robot;
 
@@ -38,7 +38,7 @@ public final class Constants
 	public static int                        location, matchNumber;
 	public static String					 eventName, gameMessage;
 	    
-    public static String                     endMarker = "end " + "-".repeat(30);
+    public static String                     functionMarker = "-".repeat(30);
 
 	// Non-drive base motor controller port assignments
 

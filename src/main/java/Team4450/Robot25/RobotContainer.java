@@ -279,8 +279,18 @@ public class RobotContainer
 			cameraFeed = CameraFeed.getInstance(); 
 			cameraFeed.start();
 		} 
-		
-		DriverStation.silenceJoystickConnectionWarning(RobotBase.isSimulation());
+
+		// Start a thread that will wait 30 seconds then disable the missing
+		// joystick warning. This is long enough for when the warning is valid
+		// but will stop flooding the console log when we are legitimately
+		// running without both joysticks plugged in.
+		new Thread(() -> {
+			try {
+				Timer.delay(30);    
+	  
+				DriverStation.silenceJoystickConnectionWarning(true);
+			} catch (Exception e) { }
+		  }).start();
 
 		// Log info about NavX.
 	  
@@ -319,7 +329,7 @@ public class RobotContainer
 
 		//PathPlannerTrajectory ppTestTrajectory = loadPPTrajectoryFile("richard");
 
-		Util.consoleLog(endMarker);
+		Util.consoleLog(functionMarker);
 	}
 
 	/**

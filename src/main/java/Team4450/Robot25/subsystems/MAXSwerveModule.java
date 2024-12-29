@@ -22,12 +22,14 @@ import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.config.SparkFlexConfig;
 import com.revrobotics.spark.config.ClosedLoopConfig.FeedbackSensor;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 
 import Team4450.Lib.Util;
 
 import com.revrobotics.spark.SparkClosedLoopController;
+import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.AbsoluteEncoder;
 import Team4450.Robot25.Constants.ModuleConstants;
 
@@ -36,10 +38,10 @@ import Team4450.Robot25.Constants.ModuleConstants;
  * This class should only be used by DriveBase, never interact with it individually.
  */
 public class MAXSwerveModule implements Sendable {
-  private final SparkMax drivingSparkMax;
+  private final SparkFlex drivingSparkFlex;
   private final SparkMax  turningSparkMax;
 
-  private SparkMaxConfig drivingConfig = new SparkMaxConfig();
+  private SparkFlexConfig drivingConfig = new SparkFlexConfig();
   private SparkMaxConfig turningConfig = new SparkMaxConfig();
 
   private SparkSim drivingSim = null, turningSim = null;
@@ -70,22 +72,22 @@ public class MAXSwerveModule implements Sendable {
                
     SendableRegistry.addLW(this, "DriveBase/Swerve Modules", moduleLocation);
     
-    drivingSparkMax = new SparkMax(drivingCANId, MotorType.kBrushless);
+    drivingSparkFlex = new SparkFlex(drivingCANId, MotorType.kBrushless);
     turningSparkMax = new SparkMax(turningCANId, MotorType.kBrushless);
 
     // Factory reset, so we get the SPARK controller to a known state before configuring
     // them. This is useful in case a SPARK controller is swapped out.
-    drivingSparkMax.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
+    drivingSparkFlex.configure(drivingConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
     turningSparkMax.configure(turningConfig, ResetMode.kResetSafeParameters, PersistMode.kNoPersistParameters);
-    //richdrivingSparkMax.restoreFactoryDefaults();
+    //richdrivingSparkFlex.restoreFactoryDefaults();
     //turningSparkMax.restoreFactoryDefaults();
 
     // Setup encoders and PID controllers for the driving and turning SPARKS MAX.
-    drivingEncoder = drivingSparkMax.getEncoder();
+    drivingEncoder = drivingSparkFlex.getEncoder();
     turningEncoder = turningSparkMax.getAbsoluteEncoder();
 
     drivingConfig.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder);
-    drivingPIDController = drivingSparkMax.getClosedLoopController();
+    drivingPIDController = drivingSparkFlex.getClosedLoopController();
 
     turningConfig.closedLoop.feedbackSensor(FeedbackSensor.kAbsoluteEncoder);
     turningPIDController = turningSparkMax.getClosedLoopController();
@@ -162,21 +164,21 @@ public class MAXSwerveModule implements Sendable {
     //                                    ModuleConstants.kTurningMaxOutput);
 
     drivingConfig.idleMode(ModuleConstants.kDrivingMotorIdleMode);
-    //richdrivingSparkMax.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
+    //richdrivingSparkFlex.setIdleMode(ModuleConstants.kDrivingMotorIdleMode);
     
     turningConfig.idleMode(ModuleConstants.kTurningMotorIdleMode);
     //richturningSparkMax.setIdleMode(ModuleConstants.kTurningMotorIdleMode);
     
     drivingConfig.smartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
-    //drivingSparkMax.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
+    //drivingSparkFlex.setSmartCurrentLimit(ModuleConstants.kDrivingMotorCurrentLimit);
     
     turningConfig.smartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
     //richturningSparkMax.setSmartCurrentLimit(ModuleConstants.kTurningMotorCurrentLimit);
 
-    // Save the SPARK MAX configurations. If a SPARK MAX browns out during
+    // Save the SPARK configurations. If a SPARK browns out during
     // operation, it will maintain the above configurations.
-    drivingSparkMax.configure(drivingConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
-    //richdrivingSparkMax.burnFlash();
+    drivingSparkFlex.configure(drivingConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    //richdrivingSparkFlex.burnFlash();
     turningSparkMax.configure(turningConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
     //richturningSparkMax.burnFlash();
 
@@ -196,11 +198,11 @@ public class MAXSwerveModule implements Sendable {
       // REV simulated encoder position and velocity, which are incorrect. However, 
       // registering the motor controller with the REV sim is still needed.
 
-      turningSim = new SparkSim(drivingSparkMax, DCMotor.getNeo550(1));
+      turningSim = new SparkSim(turningSparkMax, DCMotor.getNeo550(1));
       //richREVPhysicsSim.getInstance().addSparkMax(turningSparkMax, DCMotor.getNeo550(1));
 
-      drivingSim = new SparkSim(drivingSparkMax, DCMotor.getNEO(1));
-      //richREVPhysicsSim.getInstance().addSparkMax(drivingSparkMax, DCMotor.getNEO(1));
+      drivingSim = new SparkSim(drivingSparkFlex, DCMotor.getNeoVortex(1));
+      //richREVPhysicsSim.getInstance().addSparkMax(drivingSparkFlex, DCMotor.getNEO(1));
     }
   }
 
@@ -343,13 +345,13 @@ public class MAXSwerveModule implements Sendable {
     SparkMaxConfig drivingConfig = new SparkMaxConfig();
 
     if (on)
-      //drivingSparkMax.setIdleMode(IdleMode.kBrake);
+      //drivingSparkFlex.setIdleMode(IdleMode.kBrake);
       drivingConfig.idleMode(IdleMode.kBrake);
     else
-      //drivingSparkMax.setIdleMode(IdleMode.kCoast);
+      //drivingSparkFlex.setIdleMode(IdleMode.kCoast);
       drivingConfig.idleMode(IdleMode.kCoast);
 
-    drivingSparkMax.configure(drivingConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);  
+    drivingSparkFlex.configure(drivingConfig, ResetMode.kNoResetSafeParameters, PersistMode.kNoPersistParameters);  
   }
 
   /**
